@@ -1,0 +1,62 @@
+pipeline{
+agent any
+stages {
+stage("SCM"){
+steps{
+script{
+    echo 'cloning started'
+    git branch: 'main', credentialsId: 'sample_project', url: 'https://github.com/panthangiEshwary/Sample_project.git'
+    echo 'cloning completed'
+      }
+	 }
+	}
+	
+stage("BUILD or MAVEN"){
+steps{
+script{
+    echo 'BUILD started'
+	sh 'mvn clean package'
+    echo 'BUILD completed'
+      }
+	 }
+	}
+	
+stage("Sonar-Qube"){
+steps{
+script{
+    echo 'Sonar-Qube started'
+    echo 'Sonar-Qube completed'
+      }
+	 }
+	}
+	
+stage("Sonar-Scanner"){
+steps{
+script{
+    echo 'Sonar-Scanner started'
+    echo 'Sonar-Scanner completed'
+      }
+	 }
+	}
+	
+	stage("Artifactory"){
+steps{
+script{
+    echo 'Artifactory started'
+    echo 'Artifactory completed'
+      }
+	 }
+   }
+   stage("Deployment"){
+steps{
+script{
+    echo 'Deployment started'
+	sh 'ssh root@172.31.26.164  /opt/tomcat/bin/shutdown.sh'
+    sh 'scp -r /var/lib/jenkins/workspace/pipeline/target/citibank.war root@172.31.26.164:/opt/tomcat/webapps'
+    sh 'ssh root@172.31.26.164  /opt/tomcat/bin/startup.sh'
+    echo 'Deployment completed'
+      }
+	 }
+	}
+  }
+ }
